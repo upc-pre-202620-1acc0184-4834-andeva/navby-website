@@ -1,0 +1,82 @@
+---
+import { getDictionary, type Locale } from '@/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+const codes = ['LIM', '···', 'MAD'];
+---
+
+<section
+  id="como-funciona"
+  aria-labelledby="how-title"
+  data-how
+  class="relative overflow-hidden bg-card-white py-24 sm:py-32 dark:bg-card-black"
+>
+  <div class="mx-auto max-w-[90rem] px-5 sm:px-8 lg:px-10">
+    <h2
+      id="how-title"
+      data-reveal
+      class="max-w-[16ch] text-[clamp(2.1rem,4.6vw,4.25rem)] leading-[1.02] font-bold tracking-[-0.035em]"
+    >
+      {t.how.title}
+    </h2>
+
+    <div class="relative mt-16 sm:mt-24">
+      <!-- Ruta: arco que se dibuja con el scroll, con un avión que la recorre -->
+      <svg
+        class="pointer-events-none absolute inset-x-0 top-0 hidden h-36 w-full text-primary md:block"
+        viewBox="0 0 1200 140"
+        preserveAspectRatio="none"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M27 124 C 240 -24, 633 -24, 846 124"
+          stroke="currentColor"
+          stroke-opacity="0.18"
+          stroke-width="2"
+          stroke-dasharray="2 10"
+          stroke-linecap="round"
+          vector-effect="non-scaling-stroke"></path>
+        <path
+          data-route
+          d="M27 124 C 240 -24, 633 -24, 846 124"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          vector-effect="non-scaling-stroke"></path>
+      </svg>
+
+      <ol class="relative grid gap-12 md:grid-cols-3 md:gap-8 md:pt-28">
+        {
+          t.how.steps.map((step, i) => (
+            <li data-step class="relative flex flex-col">
+              <span
+                class:list={[
+                  'mb-6 inline-flex h-9 w-fit items-center rounded-full px-3.5 font-mono text-sm font-semibold tracking-[0.12em]',
+                  i === 2
+                    ? 'bg-accent text-text-black'
+                    : 'bg-primary-soft text-primary-dark dark:bg-primary/25 dark:text-primary-soft',
+                ]}
+                aria-hidden="true"
+              >
+                {codes[i]}
+              </span>
+              <h3 class="text-2xl leading-tight font-semibold tracking-[-0.02em] sm:text-[1.75rem]">
+                <span class="sr-only">{i + 1}. </span>
+                {step.title}
+              </h3>
+              <p class="mt-3 max-w-[34ch] text-[1.05rem] leading-relaxed text-text-muted dark:text-text-subtitles">
+                {step.text}
+              </p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>

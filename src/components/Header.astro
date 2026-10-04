@@ -1,0 +1,323 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import X from '@lucide/astro/icons/x';
+import Moon from '@lucide/astro/icons/moon';
+import Sun from '@lucide/astro/icons/sun';
+import Logo from './Logo.astro';
+import CtaButton from './CtaButton.astro';
+import { getDictionary, locales, localeNames, type Locale } from '@/i18n';
+import { WEBAPP_URL } from '@/config';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+const links = [
+  { href: '#como-funciona', label: t.nav.how },
+  { href: '#producto', label: t.nav.product },
+  { href: '#precios', label: t.nav.pricing },
+  { href: '#preguntas', label: t.nav.faq },
+];
+const otherLocales = locales.filter((l) => l !== locale);
+---
+
+<header
+  data-header
+  data-state="hero"
+  class="group/header fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-5"
+>
+  <div
+    class:list={[
+      'mx-auto flex h-16 max-w-[90rem] items-center justify-between gap-4 rounded-2xl pr-2 pl-5 sm:pl-7',
+      'transition-[background-color,box-shadow,color] duration-500 ease-(--ease-out-quart)',
+      'text-text-white',
+      // Transparente sobre el hero; barra sólida al salir de él.
+      'group-data-[state=solid]/header:bg-card-white/85 group-data-[state=solid]/header:text-text-black group-data-[state=solid]/header:shadow-[0_10px_30px_-18px_rgb(13_10_43/0.35)] group-data-[state=solid]/header:backdrop-blur-xl',
+      'dark:group-data-[state=solid]/header:bg-card-black/85 dark:group-data-[state=solid]/header:text-text-white',
+    ]}
+  >
+    <a href={getRelativeLocaleUrl(locale, '/')} class="shrink-0" aria-label={t.a11y.home}>
+      <Logo class="h-6 w-auto sm:h-7" />
+    </a>
+
+    <nav aria-label={t.a11y.mainNav} class="hidden lg:block">
+      <ul class="flex items-center gap-1">
+        {
+          links.map((l) => (
+            <li>
+              <a
+                href={l.href}
+                class="rounded-full px-4 py-2 text-[0.95rem] font-medium opacity-80 transition-opacity duration-200 hover:opacity-100"
+              >
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      {
+        otherLocales.map((l) => (
+          <a
+            href={getRelativeLocaleUrl(l, '/')}
+            hreflang={l}
+            lang={l}
+            class="hidden rounded-full px-3 py-2 text-sm font-semibold tracking-wide uppercase opacity-80 transition-opacity hover:opacity-100 sm:inline-flex"
+            aria-label={`${t.a11y.language}: ${localeNames[l]}`}
+          >
+            {l}
+          </a>
+        ))
+      }
+      <span data-magnetic class="inline-flex">
+        <button
+          type="button"
+          data-theme-toggle
+          data-label-dark={t.a11y.themeToDark}
+          data-label-light={t.a11y.themeToLight}
+          aria-label={t.a11y.themeToDark}
+          class="grid size-11 place-items-center rounded-full opacity-85 transition-opacity hover:opacity-100"
+        >
+          <span data-magnetic-label class="grid place-items-center" aria-hidden="true">
+            <Moon class="size-5 dark:hidden" stroke-width={2} />
+            <Sun class="hidden size-5 dark:block" stroke-width={2} />
+          </span>
+        </button>
+      </span>
+      <CtaButton href={WEBAPP_URL} class="max-[22rem]:hidden">{t.nav.cta}</CtaButton>
+      <span data-magnetic class="inline-flex lg:hidden">
+        <button
+          type="button"
+          data-menu-toggle
+          class="grid size-11 place-items-center rounded-full"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          aria-label={t.a11y.openMenu}
+        >
+          <span data-magnetic-label class="flex w-5 flex-col gap-[5px]" aria-hidden="true">
+            <span class="h-0.5 w-full rounded-full bg-current"></span>
+            <span class="h-0.5 w-3/4 self-end rounded-full bg-current"></span>
+          </span>
+        </button>
+      </span>
+    </div>
+  </div>
+</header>
+
+<!-- Menú lateral: panel que entra desde la derecha sobre la página desenfocada -->
+<div
+  data-drawer
+  data-open="false"
+  class="group/drawer pointer-events-none fixed inset-0 z-[60] data-[open=true]:pointer-events-auto"
+>
+  <div
+    data-drawer-backdrop
+    class="absolute inset-0 bg-[#060b20]/50 opacity-0 backdrop-blur-[6px] transition-opacity duration-400 ease-out group-data-[open=true]/drawer:opacity-100"
+    aria-hidden="true"
+  >
+  </div>
+
+  <aside
+    id="mobile-menu"
+    role="dialog"
+    aria-modal="true"
+    aria-label={t.a11y.mainNav}
+    class="on-dark invisible absolute top-0 right-0 flex h-dvh w-[min(88vw,26rem)] translate-x-[105%] flex-col overflow-y-auto border-l border-white/10 bg-sky-night/88 px-7 pt-5 pb-10 text-text-white shadow-[-30px_0_80px_-20px_rgb(6_11_32/0.6)] backdrop-blur-[40px] backdrop-saturate-150 transition-[translate,visibility] duration-500 ease-(--ease-out-expo) group-data-[open=true]/drawer:visible group-data-[open=true]/drawer:translate-x-0"
+  >
+    <span data-magnetic class="mb-10 inline-flex self-end">
+      <button
+        type="button"
+        data-drawer-close
+        class="grid size-11 place-items-center rounded-full border border-white/20 text-text-white transition-colors hover:bg-white/10"
+        aria-label={t.a11y.closeMenu}
+      >
+        <span data-magnetic-label class="grid place-items-center">
+          <X class="size-5" stroke-width={2.25} aria-hidden="true" />
+        </span>
+      </button>
+    </span>
+
+    <nav aria-label={t.a11y.mainNav}>
+      <ul class="flex flex-col gap-1">
+        {
+          links.map((l, i) => (
+            <li
+              class="group-data-[open=true]/drawer:animate-(--animate-drawer-in)"
+              style={`animation-delay:${90 + i * 60}ms`}
+            >
+              <a
+                href={l.href}
+                data-drawer-link
+                class="block py-1.5 text-[clamp(2rem,9vw,2.75rem)] leading-[1.05] font-extrabold tracking-[-0.04em] uppercase transition-[opacity,translate] duration-200 ease-out hover:translate-x-1.5 hover:opacity-75"
+              >
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <ul class="mt-10 border-t border-white/15">
+      <li
+        class="border-b border-white/10 group-data-[open=true]/drawer:animate-(--animate-drawer-in)"
+        style={`animation-delay:${90 + links.length * 60}ms`}
+      >
+        <button
+          type="button"
+          data-theme-toggle
+          role="switch"
+          aria-checked="false"
+          class="flex w-full items-center justify-between py-4 text-left text-[1.05rem] transition-[opacity,translate] duration-200 hover:translate-x-1 hover:opacity-75"
+        >
+          <span>{t.a11y.theme}</span>
+          <span
+            class="relative h-6 w-11 rounded-full bg-white/20 transition-colors duration-300 dark:bg-accent"
+            aria-hidden="true"
+          >
+            <span
+              class="absolute top-1 left-1 size-4 rounded-full bg-white transition-transform duration-300 ease-(--ease-out-expo) dark:translate-x-5"
+            ></span>
+          </span>
+        </button>
+      </li>
+      {
+        otherLocales.map((l, i) => (
+          <li
+            class="border-b border-white/10 group-data-[open=true]/drawer:animate-(--animate-drawer-in)"
+            style={`animation-delay:${90 + (links.length + 1 + i) * 60}ms`}
+          >
+            <a
+              href={getRelativeLocaleUrl(l, '/')}
+              hreflang={l}
+              lang={l}
+              class="flex items-center justify-between py-4 text-[1.05rem] transition-[opacity,translate] duration-200 hover:translate-x-1 hover:opacity-75"
+            >
+              <span>{t.a11y.language}</span>
+              <span class="font-semibold">{localeNames[l]}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div
+      class="mt-auto flex justify-center pt-10 group-data-[open=true]/drawer:animate-(--animate-drawer-in)"
+      style={`animation-delay:${90 + (links.length + 1 + otherLocales.length) * 60}ms`}
+    >
+      <CtaButton href={WEBAPP_URL} size="lg" class="w-full">{t.nav.cta}</CtaButton>
+    </div>
+  </aside>
+</div>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const drawer = document.querySelector<HTMLElement>('[data-drawer]');
+  const panel = drawer?.querySelector<HTMLElement>('aside');
+  const root = document.documentElement;
+
+  type ScrollLock = { stop(): void; start(): void };
+  const scroller = () => (window as unknown as { navbyLenis?: ScrollLock }).navbyLenis;
+
+  const closeBtn = drawer?.querySelector<HTMLButtonElement>('[data-drawer-close]');
+
+  if (toggle && drawer && panel && closeBtn) {
+    const focusables = () =>
+      Array.from(panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'));
+
+    const setOpen = (open: boolean) => {
+      drawer.dataset.open = String(open);
+      toggle.setAttribute('aria-expanded', String(open));
+      root.style.overflow = open ? 'hidden' : '';
+      if (open) {
+        scroller()?.stop();
+        // Esperar a que el panel deje de estar `visibility: hidden` para poder enfocarlo.
+        window.setTimeout(() => closeBtn.focus({ preventScroll: true }), 80);
+      } else {
+        scroller()?.start();
+      }
+    };
+
+    toggle.addEventListener('click', () => setOpen(true));
+    closeBtn.addEventListener('click', () => {
+      setOpen(false);
+      toggle.focus({ preventScroll: true });
+    });
+    drawer.querySelector('[data-drawer-backdrop]')?.addEventListener('click', () => setOpen(false));
+    panel
+      .querySelectorAll('[data-drawer-link]')
+      .forEach((a) => a.addEventListener('click', () => setOpen(false)));
+
+    document.addEventListener('keydown', (e) => {
+      if (drawer.dataset.open !== 'true') return;
+      if (e.key === 'Escape') {
+        setOpen(false);
+        toggle.focus({ preventScroll: true });
+      }
+      // Mantener el foco dentro del panel.
+      if (e.key === 'Tab') {
+        const items = focusables();
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (!first || !last) return;
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    });
+
+    window
+      .matchMedia('(min-width: 64rem)')
+      .addEventListener('change', (e) => e.matches && setOpen(false));
+  }
+
+  // Cabecera transparente sobre el hero; sólida al salir de él. Se mide la posición en cada
+  // scroll (y no con IntersectionObserver) para cubrir también saltos directos a un #ancla.
+  const sentinel = document.querySelector('[data-hero-end]');
+  if (header && sentinel) {
+    let frame = 0;
+    const updateState = () => {
+      frame = 0;
+      header.dataset.state = sentinel.getBoundingClientRect().top > 80 ? 'hero' : 'solid';
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(updateState);
+    };
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    window.addEventListener('load', schedule);
+    updateState();
+  }
+
+  // Tema: la clase .dark en <html> la fija el script inline del <head> antes de pintar.
+  const themeButtons = document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]');
+  const syncTheme = () => {
+    const dark = root.classList.contains('dark');
+    themeButtons.forEach((b) => {
+      if (b.getAttribute('role') === 'switch') b.setAttribute('aria-checked', String(dark));
+      else b.setAttribute('aria-label', (dark ? b.dataset.labelLight : b.dataset.labelDark) ?? '');
+    });
+  };
+  themeButtons.forEach((b) =>
+    b.addEventListener('click', () => {
+      const dark = !root.classList.contains('dark');
+      root.classList.toggle('dark', dark);
+      try {
+        localStorage.setItem('navby-theme', dark ? 'dark' : 'light');
+      } catch {
+        // Sin almacenamiento disponible: el tema dura lo que la visita.
+      }
+      syncTheme();
+    }),
+  );
+  syncTheme();
+</script>

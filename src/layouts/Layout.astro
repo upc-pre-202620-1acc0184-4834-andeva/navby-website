@@ -1,0 +1,98 @@
+---
+import '../styles/global.css';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getDictionary, htmlLang, locales, type Locale } from '@/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+const canonical = new URL(getRelativeLocaleUrl(locale, '/'), Astro.site);
+const alternates = locales.map((l) => ({
+  locale: l,
+  href: new URL(getRelativeLocaleUrl(l, '/'), Astro.site).href,
+  ogLocale: getDictionary(l).meta.ogLocale,
+}));
+---
+
+<!doctype html>
+<html lang={htmlLang[locale]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{t.meta.title}</title>
+    <meta name="description" content={t.meta.description} />
+    <link rel="canonical" href={canonical.href} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.locale} href={a.href} />)}
+    <link rel="alternate" hreflang="x-default" href={alternates[0]?.href} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={t.meta.title} />
+    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:locale" content={t.meta.ogLocale} />
+    {
+      alternates
+        .filter((a) => a.locale !== locale)
+        .map((a) => <meta property="og:locale:alternate" content={a.ogLocale} />)
+    }
+    <meta property="og:image" content={new URL('/og/navby-og.jpg', Astro.site).href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={t.meta.ogImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={new URL('/og/navby-og.jpg', Astro.site).href} />
+
+    <meta name="theme-color" content="#0d0a2b" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" type="image/svg+xml" href="/branding/navby-icon.svg" />
+    <link rel="icon" href="/branding/navby-icon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/branding/navby-icon.png" />
+    <script is:inline>
+      // Tema antes del primer pintado: preferencia guardada o, si no hay, la del sistema.
+      (() => {
+        let saved = null;
+        try {
+          saved = localStorage.getItem('navby-theme');
+        } catch {
+          // Almacenamiento no disponible.
+        }
+        const dark = saved
+          ? saved === 'dark'
+          : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.classList.toggle('dark', dark);
+      })();
+    </script>
+    <script is:inline>
+      // Oculta el estado inicial del hero sólo si habrá animación; se retira sola si el JS falla.
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('intro');
+        setTimeout(() => document.documentElement.classList.remove('intro'), 3000);
+      }
+    </script>
+    <link
+      rel="preload"
+      href="/fonts/albert-sans/AlbertSans-VariableFont_wght.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+  </head>
+  <body
+    class="overflow-x-clip bg-surface-white text-text-black dark:bg-surface-black dark:text-text-white"
+  >
+    <a
+      href="#main-content"
+      class="fixed top-3 left-3 z-[100] -translate-y-24 rounded-lg bg-accent px-4 py-2 font-semibold text-text-black transition-transform focus:translate-y-0"
+    >
+      {t.a11y.skip}
+    </a>
+    <slot />
+    <script>
+      import '@/scripts/motion';
+      import '@/scripts/buttons';
+    </script>
+  </body>
+</html>

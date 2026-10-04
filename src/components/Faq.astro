@@ -1,0 +1,58 @@
+---
+import { getCollection, render } from 'astro:content';
+import Plus from '@lucide/astro/icons/plus';
+import { getDictionary, type Locale } from '@/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+const entries = (await getCollection('faq', (e) => e.id.startsWith(`${locale}/`))).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const items = await Promise.all(entries.map(async (e) => ({ entry: e, ...(await render(e)) })));
+---
+
+<section
+  id="preguntas"
+  aria-labelledby="faq-title"
+  class="bg-card-white py-24 sm:py-36 dark:bg-card-black"
+>
+  <div
+    class="mx-auto grid max-w-[90rem] gap-12 px-5 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20 lg:px-10"
+  >
+    <h2
+      id="faq-title"
+      data-reveal
+      class="text-[clamp(2.1rem,4.6vw,4.25rem)] leading-[1.02] font-bold tracking-[-0.035em] lg:sticky lg:top-32 lg:self-start"
+    >
+      {t.faq.title}
+    </h2>
+
+    <div class="border-t border-border-card-dark dark:border-white/10">
+      {
+        items.map(({ entry, Content }) => (
+          <details
+            data-faq
+            class="group border-b border-border-card-dark dark:border-white/10 [&::-webkit-details-marker]:hidden"
+          >
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-lg font-semibold tracking-[-0.01em] sm:text-xl [&::-webkit-details-marker]:hidden">
+              {entry.data.question}
+              <span
+                class="grid size-9 shrink-0 place-items-center rounded-full bg-surface-white transition-[transform,background-color] duration-300 ease-(--ease-out-quart) group-open:rotate-45 group-open:bg-primary group-open:text-text-white dark:bg-surface-black"
+                aria-hidden="true"
+              >
+                <Plus class="size-4" stroke-width={2.5} />
+              </span>
+            </summary>
+            <div class="max-w-[62ch] pb-7 text-[1.05rem] leading-relaxed text-text-muted dark:text-text-subtitles">
+              <Content />
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,45 @@
+---
+import PricingPasses from './PricingPasses';
+import { getDictionary, type Locale } from '@/i18n';
+import { WEBAPP_URL } from '@/config';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+---
+
+<section id="precios" aria-labelledby="pricing-title" class="py-24 sm:py-36">
+  <div class="mx-auto max-w-[90rem] px-5 sm:px-8 lg:px-10">
+    <div class="grid gap-6 lg:grid-cols-[1.1fr_1fr] lg:items-end">
+      <h2
+        id="pricing-title"
+        data-reveal
+        class="max-w-[16ch] text-[clamp(2.1rem,4.6vw,4.25rem)] leading-[1.02] font-bold tracking-[-0.035em]"
+      >
+        {t.pricing.title}
+      </h2>
+      <p
+        data-reveal
+        class="max-w-[44ch] text-lg leading-relaxed text-text-muted lg:justify-self-end dark:text-text-subtitles"
+      >
+        {t.pricing.lead}
+      </p>
+    </div>
+
+    <div data-reveal class="mt-12 sm:mt-16">
+      <PricingPasses
+        client:visible
+        t={t.pricing}
+        currencyLabel={t.a11y.currency}
+        numberLocale={locale === 'es' ? 'es-PE' : 'en-US'}
+        initialCurrency={locale === 'es' ? 'PEN' : 'USD'}
+        webappUrl={WEBAPP_URL}
+      />
+    </div>
+
+    <p class="mt-8 text-sm text-text-muted dark:text-text-subtitles">{t.pricing.payment}</p>
+  </div>
+</section>

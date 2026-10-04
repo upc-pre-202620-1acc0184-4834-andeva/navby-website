@@ -1,0 +1,535 @@
+---
+import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
+import Search from '@lucide/astro/icons/search';
+import ShieldCheck from '@lucide/astro/icons/shield-check';
+import Logo from './Logo.astro';
+import { getDictionary, type Locale } from '@/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+const m = t.product.mock;
+
+// Mapa plano (equirectangular) del recorte de las Américas y la península ibérica.
+const LON0 = -108;
+const LAT0 = 52;
+const K = 4;
+const project = (lon: number, lat: number) => ({ x: (lon - LON0) * K, y: (LAT0 - lat) * K });
+const airports = [
+  { code: 'LIM', lon: -77.1, lat: -12.0, route: true },
+  { code: 'BOG', lon: -74.1, lat: 4.7, route: true },
+  { code: 'MAD', lon: -3.6, lat: 40.5, route: true },
+  { code: 'PTY', lon: -79.4, lat: 9.1 },
+  { code: 'MIA', lon: -80.3, lat: 25.8 },
+  { code: 'MEX', lon: -99.1, lat: 19.4 },
+  { code: 'CUN', lon: -86.9, lat: 21.0 },
+  { code: 'UIO', lon: -78.4, lat: -0.1 },
+  { code: 'SCL', lon: -70.8, lat: -33.4 },
+  { code: 'SJU', lon: -66.0, lat: 18.4 },
+  { code: 'LIS', lon: -9.1, lat: 38.8 },
+  { code: 'BCN', lon: 2.1, lat: 41.3 },
+  { code: 'CMN', lon: -7.6, lat: 33.4 },
+  { code: 'JFK', lon: -73.8, lat: 40.6 },
+].map((a) => ({ ...a, ...project(a.lon, a.lat) }));
+
+const byCode = (c: string) => airports.find((a) => a.code === c)!;
+const arc = (a: string, b: string, bend: number) => {
+  const p = byCode(a);
+  const q = byCode(b);
+  const mx = (p.x + q.x) / 2;
+  const my = (p.y + q.y) / 2 - bend;
+  return `M${p.x} ${p.y} Q ${mx} ${my} ${q.x} ${q.y}`;
+};
+const routeA = arc('LIM', 'BOG', 18);
+const routeB = arc('BOG', 'MAD', 70);
+const meridians = Array.from({ length: 13 }, (_, i) => -100 + i * 10).map(
+  (lon) => project(lon, 0).x,
+);
+const parallels = Array.from({ length: 9 }, (_, i) => 50 - i * 10).map((lat) => project(0, lat).y);
+
+// Gráfica de equilibrio: opciones ilustrativas (precio USD vs. duración h; r = escalas).
+let seed = 7;
+const rand = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+const options = Array.from({ length: 46 }, () => {
+  const duration = 11 + rand() * 30;
+  const price = 520 + rand() * 1050 - (duration - 11) * 9;
+  return {
+    price: Math.max(540, price),
+    duration,
+    stops: duration > 26 ? 2 : duration > 13 ? 1 : 0,
+  };
+});
+const PX = (price: number) => 40 + ((price - 500) / 1150) * 520;
+const PY = (hours: number) => 300 - ((hours - 10) / 32) * 270;
+const recommended = { price: 642, duration: 13.25 };
+const cheapest = { price: 589, duration: 31.7 };
+const fastest = { price: 1512, duration: 11.8 };
+---
+
+<section id="producto" aria-labelledby="product-title" class="relative py-24 sm:py-36">
+  <div class="mx-auto max-w-[90rem] px-5 sm:px-8 lg:px-10">
+    <div class="grid gap-6 lg:grid-cols-[1.1fr_1fr] lg:items-end">
+      <h2
+        id="product-title"
+        data-reveal
+        class="max-w-[14ch] text-[clamp(2.1rem,4.6vw,4.25rem)] leading-[1.02] font-bold tracking-[-0.035em]"
+      >
+        {t.product.title}
+      </h2>
+      <p
+        data-reveal
+        class="max-w-[42ch] text-lg leading-relaxed text-text-muted lg:justify-self-end dark:text-text-subtitles"
+      >
+        {t.product.lead}
+      </p>
+    </div>
+
+    <!-- Escenario del producto: la ventana se ensambla con piezas flotantes -->
+    <div data-showcase class="relative mt-14 sm:mt-20">
+      <div
+        class="absolute inset-x-0 top-[12%] bottom-0 -z-10 rounded-[1.75rem] bg-linear-to-br from-primary-soft via-accent-soft/60 to-transparent dark:from-primary/25 dark:via-sky-deep dark:to-transparent"
+        aria-hidden="true"
+      >
+      </div>
+
+      <figure class="relative mx-auto max-w-[68rem] px-0 pt-6 sm:px-10 sm:pt-12">
+        <div
+          data-window
+          class="overflow-hidden rounded-2xl bg-card-white shadow-[0_40px_80px_-40px_rgb(13_10_43/0.45),0_2px_6px_rgb(13_10_43/0.06)] ring-1 ring-black/5 dark:bg-card-black dark:ring-white/10"
+        >
+          <!-- Barra superior de la webapp -->
+          <div
+            class="flex items-center gap-3 border-b border-border-card-dark px-4 py-3 sm:px-5 dark:border-white/10"
+          >
+            <Logo variant="isotipo" class="h-4 w-auto text-primary" />
+            <div
+              class="flex min-w-0 flex-1 items-center gap-2 rounded-full bg-surface-white px-3.5 py-2 text-sm sm:text-[0.95rem] dark:bg-surface-black"
+            >
+              <Search
+                class="size-4 shrink-0 text-text-muted dark:text-text-subtitles"
+                aria-hidden="true"
+              />
+              <span class="truncate font-medium">
+                {m.from}
+                <span class="text-text-muted dark:text-text-subtitles">LIM</span>
+                <span class="mx-1 text-primary" aria-hidden="true">→</span>
+                {m.to}
+                <span class="text-text-muted dark:text-text-subtitles">MAD</span>
+              </span>
+              <span
+                class="ml-auto hidden shrink-0 text-text-muted md:inline dark:text-text-subtitles"
+              >
+                {m.dates} · {m.passengers}
+              </span>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-[1.05fr_1fr]">
+            <!-- Resultados -->
+            <div class="flex flex-col gap-3 p-4 sm:p-5">
+              <article
+                data-piece="rec"
+                class="relative rounded-xl border-2 border-accent p-4 sm:p-5"
+              >
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <p
+                      class="text-xs font-bold tracking-[0.08em] text-accent-ink uppercase dark:text-accent"
+                    >
+                      {m.recommended}
+                    </p>
+                    <p class="mt-1 text-sm text-text-muted dark:text-text-subtitles">{m.why}</p>
+                  </div>
+                  <p
+                    class="tabular shrink-0 text-2xl font-extrabold tracking-[-0.02em] text-primary sm:text-3xl"
+                  >
+                    $642
+                  </p>
+                </div>
+                <div class="tabular mt-4 flex items-center gap-3 text-lg font-semibold">
+                  <span>23:40</span>
+                  <span class="relative h-px flex-1 bg-current opacity-25" aria-hidden="true">
+                    <span
+                      class="absolute top-1/2 left-[38%] size-2.5 -translate-y-1/2 rounded-full border-2 border-accent bg-card-white dark:bg-card-black"
+                    ></span>
+                  </span>
+                  <span
+                    >17:55<sup class="ml-0.5 text-xs text-text-muted dark:text-text-subtitles"
+                      >+1</sup
+                    ></span
+                  >
+                </div>
+                <p class="mt-2 text-sm text-text-muted dark:text-text-subtitles">
+                  {m.stop} · {m.duration}
+                </p>
+                <span
+                  class="mt-4 inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-text-white"
+                >
+                  {m.book}
+                  <ArrowUpRight class="size-4" aria-hidden="true" />
+                </span>
+              </article>
+
+              {
+                [
+                  { price: '$589', line: m.alt1, note: m.cheaper },
+                  { price: '$1,512', line: m.alt2, note: m.faster },
+                ].map((alt) => (
+                  <article
+                    data-piece="alt"
+                    class="flex items-center justify-between gap-3 rounded-xl border border-border-card-dark px-4 py-3 dark:border-white/10"
+                  >
+                    <div class="min-w-0">
+                      <p class="truncate text-[0.95rem] font-medium">{alt.line}</p>
+                      <p class="text-sm text-text-muted dark:text-text-subtitles">{alt.note}</p>
+                    </div>
+                    <p class="tabular text-lg font-semibold text-text-muted dark:text-text-subtitles">
+                      {alt.price}
+                    </p>
+                  </article>
+                ))
+              }
+            </div>
+
+            <!-- Mapa plano de la ruta -->
+            <div class="relative aspect-[480/352] overflow-hidden bg-sky-night md:aspect-auto">
+              <svg
+                viewBox="0 0 480 352"
+                class="absolute inset-0 size-full"
+                preserveAspectRatio="xMidYMid meet"
+                role="img"
+                aria-label="LIM → BOG → MAD"
+              >
+                <g stroke="white" stroke-opacity="0.07" stroke-width="1">
+                  {meridians.map((x) => <line x1={x} y1="0" x2={x} y2="352" />)}
+                  {parallels.map((y) => <line x1="0" y1={y} x2="480" y2={y} />)}
+                </g>
+                {
+                  airports
+                    .filter((a) => !a.route)
+                    .map((a) => (
+                      <g fill="white" fill-opacity="0.45">
+                        <circle cx={a.x} cy={a.y} r="2.2" />
+                        <text
+                          x={a.x + 6}
+                          y={a.y + 3.5}
+                          font-size="9"
+                          font-weight="600"
+                          fill-opacity="0.4"
+                          class="font-mono"
+                        >
+                          {a.code}
+                        </text>
+                      </g>
+                    ))
+                }
+                <path
+                  d={routeA}
+                  stroke="#604aff"
+                  stroke-width="2.5"
+                  fill="none"
+                  stroke-linecap="round"
+                  data-map-route></path>
+                <path
+                  d={routeB}
+                  stroke="#ff6b35"
+                  stroke-width="2.5"
+                  fill="none"
+                  stroke-linecap="round"
+                  data-map-route></path>
+                {
+                  airports
+                    .filter((a) => a.route)
+                    .map((a) => (
+                      <g>
+                        <circle cx={a.x} cy={a.y} r="9" fill="#ff6b35" fill-opacity="0.18" />
+                        <circle
+                          cx={a.x}
+                          cy={a.y}
+                          r="4"
+                          fill="white"
+                          stroke="#ff6b35"
+                          stroke-width="2"
+                        />
+                        <text
+                          x={a.x + 10}
+                          y={a.y - 8}
+                          font-size="12"
+                          font-weight="700"
+                          fill="white"
+                          class="font-mono"
+                        >
+                          {a.code}
+                        </text>
+                      </g>
+                    ))
+                }
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Piezas flotantes (estilo ensamblaje) -->
+        <div
+          data-float
+          class="absolute top-0 left-0 hidden items-center gap-2 rounded-full bg-card-white py-2.5 pr-4 pl-3 text-sm font-semibold shadow-[0_18px_40px_-20px_rgb(13_10_43/0.5)] ring-1 ring-black/5 sm:flex lg:-left-6 dark:bg-card-black dark:ring-white/10"
+        >
+          <span
+            class="grid size-6 place-items-center rounded-full bg-success/15"
+            aria-hidden="true"
+          >
+            <span class="size-2 rounded-full bg-success"></span>
+          </span>
+          {m.verified}
+        </div>
+
+        <div
+          data-float
+          class="absolute top-[38%] -right-2 hidden items-center gap-2 rounded-full bg-accent px-4 py-2.5 text-sm font-bold text-text-black shadow-[0_18px_40px_-20px_rgb(232_85_30/0.7)] sm:flex lg:-right-8"
+        >
+          <ShieldCheck class="size-4" aria-hidden="true" />
+          {m.commission}
+        </div>
+
+        <div
+          data-float
+          class="absolute -bottom-8 left-[6%] hidden w-60 rounded-2xl bg-card-white p-4 shadow-[0_24px_50px_-24px_rgb(13_10_43/0.5)] ring-1 ring-black/5 md:block dark:bg-card-black dark:ring-white/10"
+          aria-hidden="true"
+        >
+          {
+            t.product.features[0]!.axes!.map((axis, i) => (
+              <div class="mb-2.5 last:mb-0">
+                <div class="mb-1 flex justify-between text-xs font-semibold">
+                  <span>{axis}</span>
+                  <span class="tabular text-text-muted dark:text-text-subtitles">
+                    {[86, 92, 88][i]}
+                  </span>
+                </div>
+                <div class="h-1.5 overflow-hidden rounded-full bg-surface-white dark:bg-surface-black">
+                  <div
+                    data-meter
+                    class:list={[
+                      'h-full origin-left rounded-full',
+                      i === 1 ? 'bg-accent' : 'bg-primary',
+                    ]}
+                    style={`width:${[86, 92, 88][i]}%`}
+                  />
+                </div>
+              </div>
+            ))
+          }
+        </div>
+
+        <figcaption
+          class="mt-14 text-center text-xs tracking-wide text-text-muted dark:text-text-subtitles"
+        >
+          {t.a11y.illustrative}
+        </figcaption>
+      </figure>
+    </div>
+
+    <!-- Tres demostraciones del mecanismo -->
+    <div class="mt-28 flex flex-col gap-24 sm:mt-40 sm:gap-36">
+      {
+        t.product.features.map((f, i) => (
+          <div data-feature class="grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
+            <div class:list={['max-w-[30rem]', i % 2 === 1 && 'lg:order-2 lg:justify-self-end']}>
+              <h3 class="text-[clamp(1.75rem,3vw,2.6rem)] leading-[1.05] font-bold tracking-[-0.03em]">
+                {f.title}
+              </h3>
+              <p class="mt-4 text-lg leading-relaxed text-text-muted dark:text-text-subtitles">
+                {f.text}
+              </p>
+            </div>
+
+            <div
+              class:list={[
+                'relative rounded-2xl bg-card-white p-5 shadow-[0_30px_60px_-36px_rgb(13_10_43/0.4)] ring-1 ring-black/5 sm:p-7 dark:bg-card-black dark:ring-white/10',
+                i % 2 === 1 && 'lg:order-1',
+              ]}
+            >
+              {i === 0 && (
+                <svg
+                  viewBox="0 0 600 340"
+                  class="h-auto w-full"
+                  role="img"
+                  aria-label={f.title}
+                  data-scatter
+                >
+                  <line
+                    x1="40"
+                    y1="300"
+                    x2="580"
+                    y2="300"
+                    stroke="currentColor"
+                    stroke-opacity="0.15"
+                  />
+                  <line
+                    x1="40"
+                    y1="20"
+                    x2="40"
+                    y2="300"
+                    stroke="currentColor"
+                    stroke-opacity="0.15"
+                  />
+                  <text
+                    x="580"
+                    y="326"
+                    text-anchor="end"
+                    font-size="13"
+                    fill="currentColor"
+                    fill-opacity="0.55"
+                  >
+                    {f.axes![0]} →
+                  </text>
+                  <text x="34" y="14" font-size="13" fill="currentColor" fill-opacity="0.55">
+                    {f.axes![2]} ↑
+                  </text>
+                  {options.map((o) => (
+                    <circle
+                      data-dot
+                      cx={PX(o.price)}
+                      cy={PY(o.duration)}
+                      r={4 + o.stops * 2}
+                      fill="currentColor"
+                      fill-opacity="0.16"
+                    />
+                  ))}
+                  <g>
+                    <circle
+                      cx={PX(cheapest.price)}
+                      cy={PY(cheapest.duration)}
+                      r="8"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-opacity="0.45"
+                      stroke-dasharray="3 3"
+                    />
+                    <text
+                      x={PX(cheapest.price) + 14}
+                      y={PY(cheapest.duration) + 4}
+                      font-size="13"
+                      fill="currentColor"
+                      fill-opacity="0.6"
+                    >
+                      {m.cheaper}
+                    </text>
+                    <circle
+                      cx={PX(fastest.price)}
+                      cy={PY(fastest.duration)}
+                      r="6"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-opacity="0.45"
+                      stroke-dasharray="3 3"
+                    />
+                    <text
+                      x={PX(fastest.price)}
+                      y={PY(fastest.duration) - 14}
+                      text-anchor="middle"
+                      font-size="13"
+                      fill="currentColor"
+                      fill-opacity="0.6"
+                    >
+                      {m.faster}
+                    </text>
+                  </g>
+                  <g data-best>
+                    <circle
+                      cx={PX(recommended.price)}
+                      cy={PY(recommended.duration)}
+                      r="22"
+                      fill="#ff6b35"
+                      fill-opacity="0.16"
+                    />
+                    <circle
+                      cx={PX(recommended.price)}
+                      cy={PY(recommended.duration)}
+                      r="8"
+                      fill="#ff6b35"
+                    />
+                    <text
+                      x={PX(recommended.price) + 18}
+                      y={PY(recommended.duration) - 18}
+                      font-size="14"
+                      font-weight="700"
+                      class="fill-accent-ink dark:fill-accent"
+                    >
+                      {m.recommended} · $642
+                    </text>
+                  </g>
+                </svg>
+              )}
+
+              {i === 1 && (
+                <div class="flex flex-col gap-4" data-fare>
+                  {f.steps!.map((label, k) => (
+                    <div
+                      class:list={[
+                        'flex items-center justify-between gap-4 rounded-xl px-5 py-4',
+                        k === 0
+                          ? 'bg-primary text-text-white'
+                          : 'bg-surface-white dark:bg-surface-black',
+                      ]}
+                    >
+                      <span class="flex items-center gap-3 font-semibold">
+                        {k === 0 ? (
+                          <Logo variant="isotipo" class="h-3.5 w-auto" />
+                        ) : (
+                          <ArrowUpRight class="size-4" aria-hidden="true" />
+                        )}
+                        {label}
+                      </span>
+                      <span class="tabular text-2xl font-extrabold tracking-[-0.02em]">
+                        $642.00
+                      </span>
+                    </div>
+                  ))}
+                  <p class="tabular flex items-center justify-end gap-2 pr-1 text-lg font-bold text-success-ink dark:text-success">
+                    <ShieldCheck class="size-5" aria-hidden="true" />+ $0.00
+                  </p>
+                </div>
+              )}
+
+              {i === 2 && (
+                <div data-timeline class="py-2">
+                  <div class="tabular flex items-end justify-between text-sm font-semibold">
+                    <span class="font-mono text-base">LIM</span>
+                    <span class="font-mono text-base">BOG</span>
+                    <span class="font-mono text-base">MAD</span>
+                  </div>
+                  <div class="mt-3 flex h-3 items-center gap-1.5">
+                    <span data-seg class="h-full basis-[22%] origin-left rounded-full bg-primary" />
+                    <span
+                      data-seg
+                      class="h-full basis-[17%] origin-left rounded-full border-2 border-dashed border-accent"
+                    />
+                    <span data-seg class="h-full flex-1 origin-left rounded-full bg-primary" />
+                  </div>
+                  <div class="tabular mt-3 flex justify-between text-sm text-text-muted dark:text-text-subtitles">
+                    <span class="basis-[22%]">3 h 05</span>
+                    <span class="basis-[17%] font-semibold text-accent-ink dark:text-accent">
+                      2 h 10
+                    </span>
+                    <span class="flex-1 text-right">8 h 00</span>
+                  </div>
+                  <p class="mt-6 flex items-center justify-between border-t border-border-card-dark pt-4 font-semibold dark:border-white/10">
+                    <span>{m.stop}</span>
+                    <span class="tabular">{m.duration}</span>
+                  </p>
+                </div>
+              )}
+
+              <p class="mt-4 text-right text-[0.7rem] tracking-wide text-text-muted dark:text-text-subtitles">
+                {t.a11y.illustrative}
+              </p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

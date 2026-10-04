@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "title": "Navby — El mejor vuelo. Al mejor precio.",
+    "description": "Navby evalúa precio, escalas y duración al mismo tiempo y te recomienda el vuelo que realmente conviene. Tarifas reales, enlace directo con la aerolínea y cero comisiones.",
+    "ogLocale": "es_ES",
+    "ogImageAlt": "Avión comercial visto de frente volando sobre un mar de nubes"
+  },
+  "a11y": {
+    "skip": "Saltar al contenido",
+    "home": "Navby, inicio",
+    "mainNav": "Navegación principal",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "language": "Idioma",
+    "currency": "Moneda",
+    "theme": "Modo oscuro",
+    "themeToDark": "Activar modo oscuro",
+    "themeToLight": "Activar modo claro",
+    "illustrative": "Datos ilustrativos"
+  },
+  "nav": {
+    "how": "Cómo funciona",
+    "product": "Producto",
+    "pricing": "Precios",
+    "faq": "Preguntas",
+    "cta": "Planificar vuelo"
+  },
+  "hero": {
+    "titleA": "El mejor vuelo.",
+    "titleB": "Al mejor precio.",
+    "lead": "Navby evalúa precio, escalas y duración al mismo tiempo y te dice qué vuelo te conviene. Sin quince pestañas abiertas. Sin comisiones.",
+    "cta": "Planificar mi próximo vuelo",
+    "secondary": "Ver cómo funciona",
+    "note": "2 búsquedas gratis cada día",
+    "scroll": "Desliza"
+  },
+  "statement": {
+    "label": "Por qué Navby",
+    "text": "Buscar un vuelo no debería costarte una tarde. Los buscadores te dan ciento cincuenta resultados y te dejan elegir entre lo barato que tarda cuarenta horas y lo directo que no puedes pagar. Navby hace el trabajo difícil: equilibra precio, escalas y rapidez, y te entrega el vuelo que de verdad conviene."
+  },
+  "how": {
+    "title": "De la idea al asiento, en tres pasos.",
+    "steps": [
+      {
+        "title": "Dinos a dónde vas",
+        "text": "Origen, destino y fechas. Solo ida o ida y vuelta, entre cualquier par de ciudades."
+      },
+      {
+        "title": "Navby lo pesa todo",
+        "text": "Compara miles de combinaciones y evalúa precio, escalas y duración juntos, no por separado."
+      },
+      {
+        "title": "Reserva directo",
+        "text": "Te llevamos a la web oficial de la aerolínea. El precio que ves es el que pagas."
+      }
+    ]
+  },
+  "product": {
+    "title": "Una recomendación, no una lista.",
+    "lead": "Navby te muestra los vuelos que de verdad convienen, con la ruta sobre el mapa y la tarifa verificada al minuto.",
+    "mock": {
+      "from": "Lima",
+      "to": "Madrid",
+      "dates": "12 mar — 28 mar",
+      "passengers": "1 adulto",
+      "recommended": "Vuelo recomendado",
+      "why": "Mejor balance entre precio, escalas y duración",
+      "stop": "1 escala en Bogotá · 2 h 10 min",
+      "duration": "13 h 15 min",
+      "verified": "Tarifa verificada hace 1 min",
+      "commission": "0% comisión",
+      "book": "Reservar con la aerolínea",
+      "alt1": "2 escalas · 31 h 40 min",
+      "alt2": "Directo · 11 h 50 min",
+      "cheaper": "Más barato, 18 h más de viaje",
+      "faster": "Más rápido, +$870"
+    },
+    "features": [
+      {
+        "title": "Balance, no extremos",
+        "text": "Ni el más barato de treinta horas ni el directo impagable. El vuelo recomendado es el que mejor equilibra lo que te importa.",
+        "axes": ["Precio", "Escalas", "Duración"]
+      },
+      {
+        "title": "Tarifa real, enlace directo",
+        "text": "Cotizamos en tiempo real y te enviamos al vendedor oficial. Navby no añade comisiones ni infla el precio.",
+        "steps": ["Precio en Navby", "Precio en la aerolínea"]
+      },
+      {
+        "title": "Tu ruta, a la vista",
+        "text": "Cada conexión dibujada sobre un mapa plano: dónde haces escala y cuánto esperas, antes de comprar."
+      }
+    ]
+  },
+  "board": {
+    "title": "Sin letra chica.",
+    "lead": "Lo que prometemos cabe en un tablero de salidas.",
+    "head": ["Dato", "Detalle"],
+    "rows": [
+      { "value": "3000+", "label": "Aeropuertos en los cinco continentes" },
+      { "value": "0%", "label": "Comisión añadida a tu pasaje" },
+      { "value": "10", "label": "Créditos gratis cada día" },
+      { "value": "24H", "label": "Para que tus créditos se renueven" }
+    ]
+  },
+  "pricing": {
+    "title": "Empieza gratis. Recarga solo si lo necesitas.",
+    "lead": "Cada búsqueda completa usa 5 créditos. Sin suscripciones ni cobros automáticos: los créditos que compras no caducan.",
+    "credits": "créditos",
+    "searches": "búsquedas completas",
+    "perDay": "cada día",
+    "free": {
+      "name": "Gratis",
+      "price": "0",
+      "detail": "10 créditos renovados cada 24 horas",
+      "searches": "2 búsquedas completas al día",
+      "cta": "Crear cuenta gratis"
+    },
+    "packs": [
+      { "id": "escapada", "name": "Escapada" },
+      { "id": "frecuente", "name": "Viajero frecuente" },
+      { "id": "nomada", "name": "Nómada" }
+    ],
+    "perSearch": "por búsqueda",
+    "packCta": "Elegir paquete",
+    "payment": "Pago único y seguro con Mercado Pago.",
+    "boarding": "Pase de abordar",
+    "class": "Clase"
+  },
+  "faq": {
+    "title": "Preguntas frecuentes"
+  },
+  "final": {
+    "title": "Tu próximo vuelo empieza aquí.",
+    "lead": "Dos búsquedas gratis cada día. Sin tarjeta de crédito.",
+    "cta": "Planificar mi próximo vuelo"
+  },
+  "footer": {
+    "tagline": "El mejor vuelo. Al mejor precio.",
+    "madeBy": "Navby es un producto de Andeva.",
+    "rights": "© 2026 Andeva. Todos los derechos reservados.",
+    "product": "Producto",
+    "company": "Compañía",
+    "about": "Sobre Andeva"
+  }
+}

@@ -1,0 +1,65 @@
+---
+import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
+
+interface Props {
+  href: string;
+  variant?: 'accent' | 'primary' | 'light';
+  size?: 'md' | 'lg';
+  class?: string;
+  icon?: boolean;
+  [key: `data-${string}`]: string;
+}
+
+const {
+  href,
+  variant = 'accent',
+  size = 'md',
+  class: className,
+  icon = true,
+  ...rest
+} = Astro.props;
+
+const variants = {
+  accent: 'bg-accent text-text-black hover:bg-accent-dark',
+  primary: 'bg-primary text-text-white hover:bg-primary-dark',
+  light: 'bg-card-white text-text-black hover:bg-primary-soft',
+};
+
+const sizes = {
+  md: 'h-11 pl-5 pr-4 text-[0.95rem] gap-2',
+  lg: 'h-14 pl-7 pr-5 text-base sm:text-lg gap-3',
+};
+---
+
+<!-- Imán: el envoltorio sigue al cursor y vuelve con rebote (src/scripts/buttons.ts) -->
+<span data-magnetic class:list={['inline-flex', className]}>
+  <a
+    href={href}
+    class:list={[
+      'group/cta inline-flex flex-1 items-center justify-center rounded-full font-semibold tracking-[-0.01em] whitespace-nowrap',
+      'transition-[background-color,box-shadow,scale] duration-300 ease-(--ease-out-quart) active:scale-[0.97]',
+      'shadow-[0_8px_24px_-12px_rgb(13_10_43/0.55)] hover:shadow-[0_14px_32px_-14px_rgb(13_10_43/0.6)]',
+      variants[variant],
+      sizes[size],
+    ]}
+    {...rest}
+  >
+    <span data-magnetic-label class="inline-flex items-center gap-[inherit]">
+      <slot />
+      {
+        icon && (
+          <span class="relative grid size-6 place-items-center overflow-hidden" aria-hidden="true">
+            <ArrowUpRight
+              class="size-[1.15em] transition-transform duration-500 ease-(--ease-out-expo) group-hover/cta:translate-x-5 group-hover/cta:-translate-y-5"
+              stroke-width={2.25}
+            />
+            <ArrowUpRight
+              class="absolute size-[1.15em] -translate-x-5 translate-y-5 transition-transform duration-500 ease-(--ease-out-expo) group-hover/cta:translate-x-0 group-hover/cta:translate-y-0"
+              stroke-width={2.25}
+            />
+          </span>
+        )
+      }
+    </span>
+  </a>
+</span>

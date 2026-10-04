@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "title": "Navby — The best flight. At the best price.",
+    "description": "Navby weighs price, layovers and duration at the same time and recommends the flight that actually makes sense. Live fares, direct airline links and zero commissions.",
+    "ogLocale": "en_US",
+    "ogImageAlt": "Commercial airliner seen head-on flying above a sea of clouds"
+  },
+  "a11y": {
+    "skip": "Skip to content",
+    "home": "Navby, home",
+    "mainNav": "Main navigation",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "language": "Language",
+    "currency": "Currency",
+    "theme": "Dark mode",
+    "themeToDark": "Switch to dark mode",
+    "themeToLight": "Switch to light mode",
+    "illustrative": "Illustrative data"
+  },
+  "nav": {
+    "how": "How it works",
+    "product": "Product",
+    "pricing": "Pricing",
+    "faq": "FAQ",
+    "cta": "Plan a flight"
+  },
+  "hero": {
+    "titleA": "The best flight.",
+    "titleB": "At the best price.",
+    "lead": "Navby weighs price, layovers and duration at the same time and tells you which flight makes sense. No fifteen open tabs. No commissions.",
+    "cta": "Plan my next flight",
+    "secondary": "See how it works",
+    "note": "2 free searches every day",
+    "scroll": "Scroll"
+  },
+  "statement": {
+    "label": "Why Navby",
+    "text": "Finding a flight shouldn't cost you an afternoon. Search engines hand you a hundred and fifty results and make you choose between the cheap one that takes forty hours and the direct one you can't afford. Navby does the hard part: it balances price, layovers and speed, and gives you the flight that truly makes sense."
+  },
+  "how": {
+    "title": "From idea to seat, in three steps.",
+    "steps": [
+      {
+        "title": "Tell us where you're going",
+        "text": "Origin, destination and dates. One-way or round trip, between any two cities."
+      },
+      {
+        "title": "Navby weighs it all",
+        "text": "It compares thousands of combinations and evaluates price, layovers and duration together, not one at a time."
+      },
+      {
+        "title": "Book direct",
+        "text": "We send you to the airline's official site. The price you see is the price you pay."
+      }
+    ]
+  },
+  "product": {
+    "title": "A recommendation, not a list.",
+    "lead": "Navby shows you the flights that actually make sense, with the route on the map and the fare verified to the minute.",
+    "mock": {
+      "from": "Lima",
+      "to": "Madrid",
+      "dates": "Mar 12 — Mar 28",
+      "passengers": "1 adult",
+      "recommended": "Recommended flight",
+      "why": "Best balance of price, layovers and duration",
+      "stop": "1 stop in Bogotá · 2 h 10 min",
+      "duration": "13 h 15 min",
+      "verified": "Fare verified 1 min ago",
+      "commission": "0% commission",
+      "book": "Book with the airline",
+      "alt1": "2 stops · 31 h 40 min",
+      "alt2": "Nonstop · 11 h 50 min",
+      "cheaper": "Cheaper, 18 h longer",
+      "faster": "Faster, +$870"
+    },
+    "features": [
+      {
+        "title": "Balance, not extremes",
+        "text": "Not the cheapest thirty-hour trip, not the unaffordable nonstop. The recommended flight is the one that best balances what you care about.",
+        "axes": ["Price", "Layovers", "Duration"]
+      },
+      {
+        "title": "Real fare, direct link",
+        "text": "We quote live and send you to the official seller. Navby adds no commission and never inflates the price.",
+        "steps": ["Price on Navby", "Price at the airline"]
+      },
+      {
+        "title": "Your route, in plain sight",
+        "text": "Every connection drawn on a flat map: where you stop and how long you wait, before you buy."
+      }
+    ]
+  },
+  "board": {
+    "title": "No fine print.",
+    "lead": "Everything we promise fits on a departures board.",
+    "head": ["Figure", "Detail"],
+    "rows": [
+      { "value": "3000+", "label": "Airports across five continents" },
+      { "value": "0%", "label": "Commission added to your ticket" },
+      { "value": "10", "label": "Free credits every day" },
+      { "value": "24H", "label": "For your credits to renew" }
+    ]
+  },
+  "pricing": {
+    "title": "Start free. Top up only if you need to.",
+    "lead": "Each full search uses 5 credits. No subscriptions or automatic charges: the credits you buy never expire.",
+    "credits": "credits",
+    "searches": "full searches",
+    "perDay": "every day",
+    "free": {
+      "name": "Free",
+      "price": "0",
+      "detail": "10 credits renewed every 24 hours",
+      "searches": "2 full searches per day",
+      "cta": "Create a free account"
+    },
+    "packs": [
+      { "id": "escapada", "name": "Getaway" },
+      { "id": "frecuente", "name": "Frequent flyer" },
+      { "id": "nomada", "name": "Nomad" }
+    ],
+    "perSearch": "per search",
+    "packCta": "Choose pack",
+    "payment": "One-time, secure payment with Mercado Pago.",
+    "boarding": "Boarding pass",
+    "class": "Class"
+  },
+  "faq": {
+    "title": "Frequently asked questions"
+  },
+  "final": {
+    "title": "Your next flight starts here.",
+    "lead": "Two free searches every day. No credit card.",
+    "cta": "Plan my next flight"
+  },
+  "footer": {
+    "tagline": "The best flight. At the best price.",
+    "madeBy": "Navby is a product by Andeva.",
+    "rights": "© 2026 Andeva. All rights reserved.",
+    "product": "Product",
+    "company": "Company",
+    "about": "About Andeva"
+  }
+}

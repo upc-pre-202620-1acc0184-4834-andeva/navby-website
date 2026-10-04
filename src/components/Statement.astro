@@ -1,0 +1,34 @@
+---
+import { getDictionary, type Locale } from '@/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+const words = t.statement.text.split(' ');
+---
+
+<section
+  id="main-content"
+  tabindex="-1"
+  aria-label={t.statement.label}
+  class="mx-auto max-w-[90rem] px-5 pt-28 pb-24 outline-none sm:px-8 sm:pt-40 sm:pb-32 lg:px-10"
+>
+  <p
+    data-statement
+    class="max-w-[22ch] text-[clamp(1.85rem,4.4vw,4rem)] leading-[1.08] font-semibold tracking-[-0.03em] sm:max-w-[24ch]"
+  >
+    {
+      words.map((w, i) => (
+        <>
+          <span data-word class="inline-block">
+            {w}
+          </span>
+          {i < words.length - 1 && ' '}
+        </>
+      ))
+    }
+  </p>
+</section>

@@ -1,0 +1,123 @@
+---
+import Logo from './Logo.astro';
+import { getDictionary, type Locale } from '@/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+const cities =
+  locale === 'es'
+    ? [
+        'Lima',
+        'Madrid',
+        'Bogotá',
+        'Ciudad de México',
+        'Miami',
+        'Santiago',
+        'Reikiavik',
+        'Praga',
+        'Orlando',
+        'Buenos Aires',
+        'Lisboa',
+        'Cancún',
+      ]
+    : [
+        'Lima',
+        'Madrid',
+        'Bogotá',
+        'Mexico City',
+        'Miami',
+        'Santiago',
+        'Reykjavík',
+        'Prague',
+        'Orlando',
+        'Buenos Aires',
+        'Lisbon',
+        'Cancún',
+      ];
+const WIDTH = 5;
+---
+
+<section
+  aria-labelledby="board-title"
+  class="on-dark relative overflow-hidden bg-sky-night text-text-white"
+>
+  <!-- Cinta de destinos -->
+  <div class="border-b border-white/10 py-6 sm:py-8" aria-hidden="true">
+    <div class="flex w-max animate-(--animate-marquee) motion-reduce:animate-none">
+      {
+        [0, 1].map(() => (
+          <ul class="flex shrink-0 items-center">
+            {cities.map((c) => (
+              <li class="flex items-center text-[clamp(1.75rem,3.6vw,3.25rem)] font-semibold tracking-[-0.03em] whitespace-nowrap">
+                <span class="px-6 sm:px-10">{c}</span>
+                <Logo variant="isotipo" class="h-4 w-auto text-accent sm:h-5" />
+              </li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </div>
+
+  <div
+    class="mx-auto grid max-w-[90rem] gap-12 px-5 py-24 sm:px-8 sm:py-32 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20 lg:px-10"
+  >
+    <div>
+      <h2
+        id="board-title"
+        data-reveal
+        class="text-[clamp(2.1rem,4.6vw,4.25rem)] leading-[1.02] font-bold tracking-[-0.035em]"
+      >
+        {t.board.title}
+      </h2>
+      <p data-reveal class="mt-5 max-w-[30ch] text-lg leading-relaxed text-white/70">
+        {t.board.lead}
+      </p>
+    </div>
+
+    <table data-board class="w-full border-separate border-spacing-y-2 text-left">
+      <caption class="sr-only">{t.board.title}</caption>
+      <thead class="sr-only">
+        <tr>
+          <th scope="col">{t.board.head[0]}</th>
+          <th scope="col">{t.board.head[1]}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          t.board.rows.map((row) => {
+            const chars = row.value.padStart(WIDTH, ' ').split('');
+            return (
+              <tr class="bg-white/[0.04]">
+                <th
+                  scope="row"
+                  class="rounded-l-xl py-3 pr-4 pl-3 align-middle font-normal sm:pl-4"
+                >
+                  <span class="sr-only">{row.value}</span>
+                  <span class="flex gap-1" aria-hidden="true">
+                    {chars.map((ch) => (
+                      <span
+                        data-flap={ch}
+                        class="relative grid h-12 w-8 place-items-center overflow-hidden rounded-md bg-[#07051a] font-mono text-2xl font-bold text-accent sm:h-14 sm:w-10 sm:text-3xl"
+                      >
+                        <span data-flap-char>{ch === ' ' ? ' ' : ch}</span>
+                        <span class="absolute inset-x-0 top-1/2 h-px bg-black/70" />
+                      </span>
+                    ))}
+                  </span>
+                </th>
+                <td class="rounded-r-xl py-3 pr-4 align-middle text-base font-medium text-white/85 sm:text-lg">
+                  {row.label}
+                </td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

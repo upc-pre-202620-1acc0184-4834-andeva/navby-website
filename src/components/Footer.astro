@@ -1,0 +1,66 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import Logo from './Logo.astro';
+import { getDictionary, locales, localeNames, type Locale } from '@/i18n';
+import { WEBAPP_URL, ANDEVA_URL } from '@/config';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+---
+
+<footer class="mx-auto max-w-[90rem] px-5 pt-20 pb-10 sm:px-8 lg:px-10">
+  <div class="flex flex-col justify-between gap-12 md:flex-row">
+    <div>
+      <Logo class="h-8 w-auto text-primary dark:text-text-white" title="Navby" />
+      <p class="mt-4 text-lg font-semibold tracking-[-0.01em]">{t.footer.tagline}</p>
+      <p class="mt-1 text-text-muted dark:text-text-subtitles">{t.footer.madeBy}</p>
+    </div>
+
+    <div class="grid grid-cols-2 gap-10 sm:gap-16">
+      <nav aria-label={t.footer.product}>
+        <p class="text-sm font-semibold text-text-muted dark:text-text-subtitles">
+          {t.footer.product}
+        </p>
+        <ul class="mt-4 flex flex-col gap-2.5">
+          <li><a class="hover:text-primary" href="#como-funciona">{t.nav.how}</a></li>
+          <li><a class="hover:text-primary" href="#precios">{t.nav.pricing}</a></li>
+          <li><a class="hover:text-primary" href="#preguntas">{t.nav.faq}</a></li>
+          <li><a class="hover:text-primary" href={WEBAPP_URL}>{t.nav.cta}</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="text-sm font-semibold text-text-muted dark:text-text-subtitles">
+          {t.footer.company}
+        </p>
+        <ul class="mt-4 flex flex-col gap-2.5">
+          <li><a class="hover:text-primary" href={ANDEVA_URL}>{t.footer.about}</a></li>
+          {
+            locales.map((l) => (
+              <li>
+                <a
+                  class:list={['hover:text-primary', l === locale && 'font-semibold']}
+                  href={getRelativeLocaleUrl(l, '/')}
+                  hreflang={l}
+                  lang={l}
+                  aria-current={l === locale ? 'page' : undefined}
+                >
+                  {localeNames[l]}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <p
+    class="mt-16 border-t border-border-card-dark pt-6 text-sm text-text-muted dark:border-white/10 dark:text-text-subtitles"
+  >
+    {t.footer.rights}
+  </p>
+</footer>

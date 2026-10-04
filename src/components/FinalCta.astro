@@ -1,0 +1,51 @@
+---
+import { Image } from 'astro:assets';
+import CtaButton from './CtaButton.astro';
+import plane from '@/assets/hero/avion.png';
+import { getDictionary, type Locale } from '@/i18n';
+import { WEBAPP_URL } from '@/config';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+---
+
+<section aria-labelledby="final-title" class="p-2 sm:p-3">
+  <div
+    data-final
+    class="on-dark relative isolate overflow-hidden rounded-[1.25rem] bg-primary px-5 pt-20 pb-0 text-text-white sm:rounded-[1.75rem] sm:px-8 sm:pt-28 lg:px-10"
+  >
+    <div
+      class="absolute inset-0 -z-10"
+      style="background: radial-gradient(90% 70% at 50% 100%, #ff6b35 0%, #b84ad8 22%, #604aff 55%, #1b1460 100%);"
+      aria-hidden="true"
+    >
+    </div>
+    <div class="mx-auto flex max-w-[90rem] flex-col items-center text-center">
+      <h2
+        id="final-title"
+        data-reveal
+        class="max-w-[14ch] text-[clamp(2.5rem,6.4vw,6rem)] leading-[0.98] font-bold tracking-[-0.035em]"
+      >
+        {t.final.title}
+      </h2>
+      <p data-reveal class="mt-5 text-lg text-white/85">{t.final.lead}</p>
+      <div data-reveal class="mt-9">
+        <CtaButton href={WEBAPP_URL} size="lg">{t.final.cta}</CtaButton>
+      </div>
+      <div data-final-plane class="mt-14 w-[min(80vw,34rem)] translate-y-[18%]" aria-hidden="true">
+        <Image
+          src={plane}
+          alt=""
+          widths={[800, 1400, 2000, 2705]}
+          sizes="34rem"
+          class="h-auto w-full select-none"
+          draggable="false"
+        />
+      </div>
+    </div>
+  </div>
+</section>
