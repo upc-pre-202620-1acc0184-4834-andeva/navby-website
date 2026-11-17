@@ -1,6 +1,26 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/es",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/es/",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
   "rewrites": [
+    {
+      "source": "/app",
+      "destination": "https://navby-webapp.vercel.app/app"
+    },
+    {
+      "source": "/app/(.*)",
+      "destination": "https://navby-webapp.vercel.app/app/$1"
+    },
     {
       "source": "/api/:path*",
       "destination": "https://navby-api.chilecentral.cloudapp.azure.com/api/:path*"
