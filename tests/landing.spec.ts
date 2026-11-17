@@ -1,24 +1,30 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
+const routes = {
+  es: '/',
+  en: '/en/',
+} as const;
+
 for (const locale of ['es', 'en'] as const) {
-  test.describe(`landing /${locale}/`, () => {
+  const path = routes[locale];
+  test.describe(`landing ${path}`, () => {
     test('hero muestra el titular y el CTA principal', async ({ page }) => {
-      await page.goto(`/${locale}/`);
+      await page.goto(path);
       const h1 = page.getByRole('heading', { level: 1 });
       await expect(h1).toContainText(locale === 'es' ? 'El mejor vuelo.' : 'The best flight.');
-      await expect(
-        page
-          .getByRole('link', {
-            name: locale === 'es' ? /Planificar mi próximo vuelo/ : /Plan my next flight/,
-          })
-          .first(),
-      ).toBeVisible();
+      const heroCta = page
+        .getByRole('link', {
+          name: locale === 'es' ? /Planificar mi próximo vuelo/ : /Plan my next flight/,
+        })
+        .first();
+      await expect(heroCta).toBeVisible();
+      await expect(heroCta).toHaveAttribute('href', '/app');
     });
 
     test('sin violaciones WCAG 2.1 AA', async ({ page }) => {
       await page.emulateMedia({ reducedMotion: 'reduce' });
-      await page.goto(`/${locale}/`);
+      await page.goto(path);
       const results = await new AxeBuilder({ page })
         .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
         .analyze();
@@ -27,13 +33,34 @@ for (const locale of ['es', 'en'] as const) {
   });
 }
 
-test('la raíz redirige al español', async ({ page }) => {
+test('la raíz carga directamente en español sin prefijo /es', async ({ page }) => {
   await page.goto('/');
-  await expect(page).toHaveURL(/\/es\/?$/);
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'es');
+});
+
+test('guarda tema e idioma en localStorage para compartir con la webapp', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/');
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('navby-lang'))).toBe('es');
+
+  await page.locator('[data-theme-toggle]').first().click();
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('navby-theme'))).toBe('dark');
+  await expect(page.locator('html')).toHaveClass(/dark/);
+
+  await page.locator('footer a[href="/en/"]').click();
+  await expect(page).toHaveURL(/\/en\/?$/);
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('navby-lang'))).toBe('en');
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('navby-theme'))).toBe('dark');
+  await expect(page.locator('html')).toHaveClass(/dark/);
+
+  await page.locator('footer a[href="/"]').click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('navby-lang'))).toBe('es');
 });
 
 test('el selector de moneda cambia los precios', async ({ page }) => {
-  await page.goto('/es/#precios');
+  await page.goto('/#precios');
   const usd = page.getByRole('button', { name: 'USD' });
   await usd.scrollIntoViewIfNeeded();
   await usd.click();
@@ -44,7 +71,7 @@ test('el selector de moneda cambia los precios', async ({ page }) => {
 
 test('el menú móvil abre y cierra con Escape', async ({ page }, info) => {
   test.skip(info.project.name !== 'mobile', 'solo móvil');
-  await page.goto('/es/');
+  await page.goto('/');
   const toggle = page.locator('[data-menu-toggle]');
   await toggle.click();
   await expect(page.locator('#mobile-menu')).toBeVisible();
