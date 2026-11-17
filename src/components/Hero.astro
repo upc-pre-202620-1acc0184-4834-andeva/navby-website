@@ -4,7 +4,7 @@ import type { ImageMetadata } from 'astro';
 import CtaButton from './CtaButton.astro';
 import plane from '@/assets/hero/avion.png';
 import { getDictionary, type Locale } from '@/i18n';
-import { WEBAPP_URL } from '@/config';
+import { getWebappUrl } from '@/config';
 
 interface Props {
   locale: Locale;
@@ -12,6 +12,7 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = getDictionary(locale);
+const webappHref = getWebappUrl(locale);
 
 // Foto del cielo (ver docs/image-prompts.md). Si aún no existe, se usa el cielo WebGL.
 const skyFiles = import.meta.glob<{ default: ImageMetadata }>(
@@ -107,7 +108,7 @@ const skyPhoto = Object.values(skyFiles)[0]?.default;
         {t.hero.lead}
       </p>
       <div data-hero-reveal class="flex flex-col items-start gap-3 md:items-end">
-        <CtaButton href={WEBAPP_URL} size="lg">{t.hero.cta}</CtaButton>
+        <CtaButton href={webappHref} size="lg">{t.hero.cta}</CtaButton>
         <p class="flex items-center gap-2 text-sm text-white/75">
           <span class="inline-block size-1.5 rounded-full bg-success" aria-hidden="true"></span>
           {t.hero.note}

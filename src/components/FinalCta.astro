@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import CtaButton from './CtaButton.astro';
 import plane from '@/assets/hero/avion.png';
 import { getDictionary, type Locale } from '@/i18n';
-import { WEBAPP_URL } from '@/config';
+import { getWebappUrl } from '@/config';
 
 interface Props {
   locale: Locale;
@@ -11,6 +11,7 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = getDictionary(locale);
+const webappHref = getWebappUrl(locale);
 ---
 
 <section aria-labelledby="final-title" class="p-2 sm:p-3">
@@ -34,7 +35,7 @@ const t = getDictionary(locale);
       </h2>
       <p data-reveal class="mt-5 text-lg text-white/85">{t.final.lead}</p>
       <div data-reveal class="mt-9">
-        <CtaButton href={WEBAPP_URL} size="lg">{t.final.cta}</CtaButton>
+        <CtaButton href={webappHref} size="lg">{t.final.cta}</CtaButton>
       </div>
       <div data-final-plane class="mt-14 w-[min(80vw,34rem)] translate-y-[18%]" aria-hidden="true">
         <Image

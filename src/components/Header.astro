@@ -6,7 +6,7 @@ import Sun from '@lucide/astro/icons/sun';
 import Logo from './Logo.astro';
 import CtaButton from './CtaButton.astro';
 import { getDictionary, locales, localeNames, type Locale } from '@/i18n';
-import { WEBAPP_URL } from '@/config';
+import { getWebappUrl } from '@/config';
 
 interface Props {
   locale: Locale;
@@ -14,6 +14,7 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = getDictionary(locale);
+const webappHref = getWebappUrl(locale);
 const links = [
   { href: '#como-funciona', label: t.nav.how },
   { href: '#producto', label: t.nav.product },
@@ -88,7 +89,7 @@ const otherLocales = locales.filter((l) => l !== locale);
           </span>
         </button>
       </span>
-      <CtaButton href={WEBAPP_URL} class="max-[22rem]:hidden">{t.nav.cta}</CtaButton>
+      <CtaButton href={webappHref} class="max-[22rem]:hidden">{t.nav.cta}</CtaButton>
       <span data-magnetic class="inline-flex lg:hidden">
         <button
           type="button"
@@ -209,7 +210,7 @@ const otherLocales = locales.filter((l) => l !== locale);
       class="mt-auto flex justify-center pt-10 group-data-[open=true]/drawer:animate-(--animate-drawer-in)"
       style={`animation-delay:${90 + (links.length + 1 + otherLocales.length) * 60}ms`}
     >
-      <CtaButton href={WEBAPP_URL} size="lg" class="w-full">{t.nav.cta}</CtaButton>
+      <CtaButton href={webappHref} size="lg" class="w-full">{t.nav.cta}</CtaButton>
     </div>
   </aside>
 </div>
@@ -319,5 +320,23 @@ const otherLocales = locales.filter((l) => l !== locale);
       syncTheme();
     }),
   );
+  const applyStoredTheme = () => {
+    let saved: string | null = null;
+    try {
+      saved = localStorage.getItem('navby-theme');
+    } catch {
+      // Almacenamiento no disponible.
+    }
+    if (saved === 'dark' || saved === 'light') {
+      root.classList.toggle('dark', saved === 'dark');
+      syncTheme();
+    }
+  };
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) applyStoredTheme();
+  });
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'navby-theme') applyStoredTheme();
+  });
   syncTheme();
 </script>
