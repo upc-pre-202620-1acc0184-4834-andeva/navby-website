@@ -287,8 +287,8 @@ Posicionar a Navby como el recomendador de vuelos más confiable e inteligente d
 
 **Key conversion action:**  
 Clic en las llamadas a la acción principales del Website:
-* `[Planificar Vuelo]` $\rightarrow$ Apertura inmediata de la Webapp interactiva.
-* Registro de usuario para activar los 10 créditos diarios gratuitos.
+* `[Planificar Vuelo]` $\rightarrow$ Redirección a la Webapp interactiva (`/app`) para iniciar sesión o registrarse.
+* Registro de usuario para activar los 10 créditos diarios gratuitos y comenzar a buscar.
 
 **Current metrics:**  
 Fase de prelanzamiento y validación de producto (V1).

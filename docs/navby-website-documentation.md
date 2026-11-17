@@ -1,6 +1,6 @@
 # Navby Website — Documentación de Herramientas y Frameworks
 
-Este documento define de forma exhaustiva el catálogo de tecnologías, frameworks, bibliotecas y herramientas que componen el ecosistema técnico del sitio web público y portal de marketing de Navby (`navby-website`). Cada componente se detalla junto con su versión semántica exacta objetivo, su propósito específico en el ciclo de vida del desarrollo, ejecución, internacionalización, accesibilidad y despliegue.
+Este documento define de forma exhaustiva el catálogo de tecnologías, frameworks, bibliotecas y herramientas que componen el ecosistema técnico del portal de marketing y presentación comercial de Navby (`navby-website`). Cada componente se detalla junto con su versión semántica exacta objetivo, su propósito específico en el ciclo de vida del desarrollo, ejecución, internacionalización, accesibilidad y despliegue.
 
 ---
 
