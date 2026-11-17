@@ -2,7 +2,7 @@
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import Logo from './Logo.astro';
 import { getDictionary, locales, localeNames, type Locale } from '@/i18n';
-import { WEBAPP_URL, ANDEVA_URL } from '@/config';
+import { getWebappUrl, ANDEVA_URL } from '@/config';
 
 interface Props {
   locale: Locale;
@@ -10,6 +10,7 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = getDictionary(locale);
+const webappHref = getWebappUrl(locale);
 ---
 
 <footer class="mx-auto max-w-[90rem] px-5 pt-20 pb-10 sm:px-8 lg:px-10">
@@ -29,7 +30,7 @@ const t = getDictionary(locale);
           <li><a class="hover:text-primary" href="#como-funciona">{t.nav.how}</a></li>
           <li><a class="hover:text-primary" href="#precios">{t.nav.pricing}</a></li>
           <li><a class="hover:text-primary" href="#preguntas">{t.nav.faq}</a></li>
-          <li><a class="hover:text-primary" href={WEBAPP_URL}>{t.nav.cta}</a></li>
+          <li><a class="hover:text-primary" href={webappHref}>{t.nav.cta}</a></li>
         </ul>
       </nav>
       <div>

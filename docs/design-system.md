@@ -1,6 +1,6 @@
 # Navby — Sistema de Diseño Canónico (Design System)
 
-Este documento define la guía oficial y práctica de diseño visual para el ecosistema de Navby, aplicable tanto en el sitio web público ([`navby-website`](navby-website-documentation.md)) como en la aplicación interactiva ([`navby-webapp`](navby-webapp-documentation.md)). 
+Este documento define la guía oficial y práctica de diseño visual para el ecosistema de Navby, aplicable tanto en la landing informativa ([`navby-website`](navby-website-documentation.md)) como en la aplicación interactiva ([`navby-webapp`](navby-webapp-documentation.md)). 
 
 Está diseñado específicamente para integrarse de forma directa y sin fricciones con **Tailwind CSS v4**, aprovechando las clases nativas de Tailwind para tamaños (`text-sm`, `text-xl`), bordes (`rounded-md`, `rounded-xl`) y espaciados (`p-4`, `gap-3`), sin inventar escalas complejas e innecesarias.
 

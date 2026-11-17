@@ -65,6 +65,14 @@ const alternates = locales.map((l) => ({
         document.documentElement.classList.toggle('dark', dark);
       })();
     </script>
+    <script is:inline define:vars={{ locale }}>
+      // Sincroniza el idioma activo con la webapp (mismo origen, localStorage compartido).
+      try {
+        localStorage.setItem('navby-lang', locale);
+      } catch {
+        // Almacenamiento no disponible.
+      }
+    </script>
     <script is:inline>
       // Oculta el estado inicial del hero sólo si habrá animación; se retira sola si el JS falla.
       if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -93,6 +101,22 @@ const alternates = locales.map((l) => ({
     <script>
       import '@/scripts/motion';
       import '@/scripts/buttons';
+      import { WEBAPP_URL } from '@/config';
+
+      // Reafirma el idioma de esta página al ir hacia la webapp (cubre retorno por bfcache).
+      document.addEventListener('click', (event) => {
+        const link = (event.target as Element | null)?.closest<HTMLAnchorElement>('a[href]');
+        if (!link) return;
+        const href = link.getAttribute('href') ?? '';
+        const base = WEBAPP_URL.replace(/\/+$/, '');
+        if (href === base || href.startsWith(`${base}/`) || href.startsWith(`${base}?`)) {
+          try {
+            localStorage.setItem('navby-lang', document.documentElement.lang || 'es');
+          } catch {
+            // Almacenamiento no disponible.
+          }
+        }
+      });
     </script>
   </body>
 </html>
