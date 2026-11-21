@@ -66,9 +66,11 @@ const alternates = locales.map((l) => ({
       })();
     </script>
     <script is:inline define:vars={{ locale }}>
-      // Sincroniza el idioma activo con la webapp (mismo origen, localStorage compartido).
+      // Inicializa el idioma compartido solo si no hay preferencia previa (p. ej. fijada en la webapp).
       try {
-        localStorage.setItem('navby-lang', locale);
+        if (!localStorage.getItem('navby-lang')) {
+          localStorage.setItem('navby-lang', locale);
+        }
       } catch {
         // Almacenamiento no disponible.
       }
@@ -101,20 +103,18 @@ const alternates = locales.map((l) => ({
     <script>
       import '@/scripts/motion';
       import '@/scripts/buttons';
-      import { WEBAPP_URL } from '@/config';
 
-      // Reafirma el idioma de esta página al ir hacia la webapp (cubre retorno por bfcache).
+      // Actualiza el idioma compartido solo cuando el usuario cambia explícitamente desde el selector.
       document.addEventListener('click', (event) => {
-        const link = (event.target as Element | null)?.closest<HTMLAnchorElement>('a[href]');
-        if (!link) return;
-        const href = link.getAttribute('href') ?? '';
-        const base = WEBAPP_URL.replace(/\/+$/, '');
-        if (href === base || href.startsWith(`${base}/`) || href.startsWith(`${base}?`)) {
-          try {
-            localStorage.setItem('navby-lang', document.documentElement.lang || 'es');
-          } catch {
-            // Almacenamiento no disponible.
-          }
+        const langLink = (event.target as Element | null)?.closest<HTMLAnchorElement>(
+          'a[hreflang]',
+        );
+        const nextLang = langLink?.getAttribute('hreflang');
+        if (!nextLang) return;
+        try {
+          localStorage.setItem('navby-lang', nextLang);
+        } catch {
+          // Almacenamiento no disponible.
         }
       });
     </script>
