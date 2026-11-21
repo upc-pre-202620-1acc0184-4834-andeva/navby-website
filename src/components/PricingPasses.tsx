@@ -7,6 +7,7 @@ import {
   CREDITS_PER_SEARCH,
   FREE_DAILY_CREDITS,
   type Currency,
+  type PackCode,
 } from '@/data/pricing';
 import type { Dictionary } from '@/i18n';
 
@@ -15,7 +16,8 @@ interface Props {
   currencyLabel: string;
   numberLocale: string;
   initialCurrency: Currency;
-  webappUrl: string;
+  registerUrl: string;
+  packUrls: Record<PackCode, string>;
 }
 
 const CURRENCIES: Currency[] = ['USD', 'PEN'];
@@ -79,7 +81,8 @@ export default function PricingPasses({
   currencyLabel,
   numberLocale,
   initialCurrency,
-  webappUrl,
+  registerUrl,
+  packUrls,
 }: Props) {
   const [currency, setCurrency] = useState<Currency>(initialCurrency);
   const groupId = useId();
@@ -135,7 +138,7 @@ export default function PricingPasses({
           <Perforation />
           <div className="flex flex-col justify-between gap-6 p-6 sm:w-64 sm:p-7">
             <Price value={0} currency={currency} numberLocale={numberLocale} />
-            <PassLink href={webappUrl} className="bg-accent text-text-black hover:bg-accent-dark">
+            <PassLink href={registerUrl} className="bg-accent text-text-black hover:bg-accent-dark">
               {t.free.cta}
             </PassLink>
           </div>
@@ -148,12 +151,22 @@ export default function PricingPasses({
             <li
               key={p.id}
               data-pass
-              className="relative flex overflow-hidden rounded-2xl bg-card-white ring-1 ring-black/5 max-sm:flex-col dark:bg-card-black dark:ring-white/10"
+              className={[
+                'relative flex overflow-hidden rounded-2xl bg-card-white max-sm:flex-col dark:bg-card-black',
+                p.recommended ? 'ring-2 ring-primary' : 'ring-1 ring-black/5 dark:ring-white/10',
+              ].join(' ')}
             >
               <div className="flex-1 p-6 sm:p-7">
-                <p className="text-xs font-bold tracking-[0.14em] text-text-muted uppercase dark:text-text-subtitles">
-                  {t.boarding} · {t.class} {name}
-                </p>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-xs font-bold tracking-[0.14em] text-text-muted uppercase dark:text-text-subtitles">
+                    {t.boarding} · {t.class} {name}
+                  </p>
+                  {p.recommended ? (
+                    <span className="rounded-full bg-primary px-2.5 py-0.5 text-[0.7rem] font-bold tracking-wide text-text-white uppercase">
+                      {t.recommended}
+                    </span>
+                  ) : null}
+                </div>
                 <p className="mt-5 flex items-baseline gap-2">
                   <span className="tabular text-6xl font-extrabold tracking-[-0.04em]">
                     {p.credits}
@@ -177,8 +190,12 @@ export default function PricingPasses({
                   </p>
                 </div>
                 <PassLink
-                  href={webappUrl}
-                  className="bg-text-black text-text-white hover:bg-primary dark:bg-card-white dark:text-text-black dark:hover:bg-primary-soft"
+                  href={packUrls[p.code]}
+                  className={
+                    p.recommended
+                      ? 'bg-primary text-text-white hover:bg-primary-dark'
+                      : 'bg-text-black text-text-white hover:bg-primary dark:bg-card-white dark:text-text-black dark:hover:bg-primary-soft'
+                  }
                 >
                   {t.packCta}
                 </PassLink>

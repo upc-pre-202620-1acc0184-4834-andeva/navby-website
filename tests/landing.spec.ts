@@ -59,6 +59,32 @@ test('guarda tema e idioma en localStorage para compartir con la webapp', async 
   await expect.poll(() => page.evaluate(() => localStorage.getItem('navby-lang'))).toBe('es');
 });
 
+test('no sobrescribe navby-lang existente al volver al website sin cambiar idioma', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('navby-lang', 'en');
+  });
+  await page.goto('/');
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('navby-lang'))).toBe('en');
+});
+
+test('los botones de precios enlazan a registro y a billing con su paquete', async ({ page }) => {
+  await page.goto('/#precios');
+  const section = page.locator('#precios');
+  await section.scrollIntoViewIfNeeded();
+
+  await expect(section.getByRole('link', { name: /Crear cuenta gratis/ })).toHaveAttribute(
+    'href',
+    '/app/register',
+  );
+  const packLinks = section.getByRole('link', { name: /Elegir paquete/ });
+  await expect(packLinks).toHaveCount(3);
+  await expect(packLinks.nth(0)).toHaveAttribute('href', '/app/billing?pack=pack_50');
+  await expect(packLinks.nth(1)).toHaveAttribute('href', '/app/billing?pack=pack_100');
+  await expect(packLinks.nth(2)).toHaveAttribute('href', '/app/billing?pack=pack_250');
+});
+
 test('el selector de moneda cambia los precios', async ({ page }) => {
   await page.goto('/#precios');
   const usd = page.getByRole('button', { name: 'USD' });
