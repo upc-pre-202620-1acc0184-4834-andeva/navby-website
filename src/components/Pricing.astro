@@ -1,5 +1,6 @@
 ---
 import PricingPasses from './PricingPasses';
+import { packs, type PackCode } from '@/data/pricing';
 import { getDictionary, type Locale } from '@/i18n';
 import { getWebappUrl } from '@/config';
 
@@ -9,7 +10,10 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = getDictionary(locale);
-const webappHref = getWebappUrl(locale);
+const registerHref = getWebappUrl(locale, '/register');
+const packHrefs = Object.fromEntries(
+  packs.map((pack) => [pack.code, getWebappUrl(locale, `/billing?pack=${pack.code}`)]),
+) as Record<PackCode, string>;
 ---
 
 <section id="precios" aria-labelledby="pricing-title" class="py-24 sm:py-36">
@@ -37,7 +41,8 @@ const webappHref = getWebappUrl(locale);
         currencyLabel={t.a11y.currency}
         numberLocale={locale === 'es' ? 'es-PE' : 'en-US'}
         initialCurrency={locale === 'es' ? 'PEN' : 'USD'}
-        webappUrl={webappHref}
+        registerUrl={registerHref}
+        packUrls={packHrefs}
       />
     </div>
 
